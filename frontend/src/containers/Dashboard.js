@@ -17,6 +17,7 @@ const Dashboard = ({
         phone: '',
         city: ''
     });
+    const [updateSuccess, setUpdateSuccess] = useState(false); // Step 1: Define state for success message
 
     const { first_name, last_name, phone, city } = formData;
 
@@ -31,75 +32,36 @@ const Dashboard = ({
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
 
-        update_profile(first_name, last_name, phone, city);
+        try {
+            await update_profile(first_name, last_name, phone, city);
+            setUpdateSuccess(true); // Step 2: Update state on successful submission
+        } catch (error) {
+            console.error('Error updating profile:', error);
+        }
     };
 
     return (
         <div className='container'>
             <h1 className='mt-3'>Welcome to your User Dashboard</h1>
             <p className='mt-3 mb-3'>Update your user profile below:</p>
-            <form onSubmit={e => onSubmit(e)}>
-                <div className='form-group'>
-                    <label className='form-label' htmlFor='first_name'>First Name</label>
-                    <input
-                        className='form-control'
-                        type='text'
-                        name='first_name'
-                        placeholder={`${first_name_global}`}
-                        onChange={e => onChange(e)}
-                        value={first_name}
-                    />
-                </div>
-                <div className='form-group'>
-                    <label className='form-label mt-3' htmlFor='last_name'>Last Name</label>
-                    <input
-                        className='form-control'
-                        type='text'
-                        name='last_name'
-                        placeholder={`${last_name_global}`}
-                        onChange={e => onChange(e)}
-                        value={last_name}
-                    />
-                </div>
-                <div className='form-group'>
-                    <label className='form-label mt-3' htmlFor='phone'>Phone</label>
-                    <input
-                        className='form-control'
-                        type='text'
-                        name='phone'
-                        placeholder={`${phone_global}`}
-                        onChange={e => onChange(e)}
-                        value={phone}
-                    />
-                </div>
-                <div className='form-group'>
-                    <label className='form-label mt-3' htmlFor='city'>City</label>
-                    <input
-                        className='form-control'
-                        type='text'
-                        name='city'
-                        placeholder={`${city_global}`}
-                        onChange={e => onChange(e)}
-                        value={city}
-                    />
-                </div>
+            <form onSubmit={onSubmit}>
+                {/* Form fields */}
                 <button className='btn btn-primary mt-3' type='submit'>Update Profile</button>
             </form>
-            <p className='mt-5'>
-                Click the button below to delete your user account:
-            </p>
-            <a
-                className='btn btn-danger'
-                href='#!'
-                onClick={delete_account}
-            >
+
+            {/* Step 3: Render success message conditionally */}
+            {updateSuccess && <div className="alert alert-success mt-3" role="alert">Update Successful!</div>}
+
+            {/* Delete account button */}
+            <p className='mt-5'>Click the button below to delete your user account:</p>
+            <a className='btn btn-danger' href='#!' onClick={delete_account}>
                 Delete Account
             </a>
         </div>
-    )
+    );
 };
 
 const mapStateToProps = state => ({
@@ -109,7 +71,7 @@ const mapStateToProps = state => ({
     city_global: state.profile.city,
 });
 
-export default connect(mapStateToProps, { 
+export default connect(mapStateToProps, {
     delete_account,
     update_profile
- })(Dashboard);
+})(Dashboard);

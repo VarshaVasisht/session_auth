@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'accounts',
-    'user_profile'
+    'user_profile',
+    'captcha'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'session_auth',
         'USER': 'postgres',
-        'PASSWORD': 'password123',
+        'PASSWORD': 'varshapostgres1',
         'HOST': 'localhost'
     }
 }
@@ -105,6 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+RECAPTCHA_PUBLIC_KEY = '6LftloEpAAAAADuPImlPyt1KpCFBOc89kuaq1AKj'
+RECAPTCHA_PRIVATE_KEY = '6LftloEpAAAAAGwYPO-ocsqMooPDjTPFDkVMc56o'
 
 
 # Internationalization

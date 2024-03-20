@@ -25,13 +25,12 @@ class CheckAuthenticatedView(APIView):
 @method_decorator(csrf_protect, name='dispatch')
 class SignupView(APIView):
     permission_classes = (permissions.AllowAny, )
-
+    
     def post(self, request, format=None):
         data = self.request.data
-
         username = data['username']
         password = data['password']
-        re_password  = data['re_password']
+        re_password = data['re_password']
 
         try:
             if password == re_password:
@@ -99,3 +98,12 @@ class DeleteAccountView(APIView):
             return Response({ 'success': 'User deleted successfully' })
         except:
             return Response({ 'error': 'Something went wrong when trying to delete user' })
+
+class GetUsersView(APIView):
+    permission_classes = (permissions.AllowAny, )
+    
+    def get(self, request, format=None):
+        users = User.objects.all()
+        
+        users = UserSerializer(users, many=True)
+        return Response(users.data)

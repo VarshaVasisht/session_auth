@@ -12,7 +12,13 @@ import {
 } from '../actions/types';
 
 const initialState = {
-    isAuthenticated: null
+    isAuthenticated: null,
+    username: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    city: ''
+
 };
 
 export default function(state = initialState, action) {

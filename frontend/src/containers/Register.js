@@ -3,6 +3,7 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { register } from '../actions/auth';
 import CSRFToken from '../components/CSRFToken';
+import ReCAPTCHA from 'react-google-recaptcha'; // Import reCAPTCHA component
 
 const Register = ({ register, isAuthenticated }) => {
     const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Register = ({ register, isAuthenticated }) => {
         re_password: ''
     });
     const [accountCreated, setAccountCreated] = useState(false);
+    const [captchaVerified, setCaptchaVerified] = useState(false); // State to track reCAPTCHA verification
 
     const { username, password, re_password } = formData;
 
@@ -19,11 +21,25 @@ const Register = ({ register, isAuthenticated }) => {
     const onSubmit = e => {
         e.preventDefault();
 
+        if (!captchaVerified) {
+            alert('Please verify reCAPTCHA.');
+            return; // Prevent form submission if reCAPTCHA is not verified
+        }
+
         if (password === re_password) {
             register(username, password, re_password);
             setAccountCreated(true);
         }
     };
+
+    const handleCaptchaChange = value => {
+        // Called when reCAPTCHA is verified
+        console.log("Captcha value:", value);
+        setCaptchaVerified(true);
+    };
+
+    if (accountCreated)
+        return <Redirect to='/' />;
 
     if (isAuthenticated)
         return <Redirect to='/dashboard' />;
@@ -74,6 +90,11 @@ const Register = ({ register, isAuthenticated }) => {
                         required
                     />
                 </div>
+                {/* Add reCAPTCHA component */}
+                <ReCAPTCHA
+                    sitekey="6LftloEpAAAAADuPImlPyt1KpCFBOc89kuaq1AKj"
+                    onChange={handleCaptchaChange}
+                />
                 <button className='btn btn-primary mt-3' type='submit'>Register</button>
             </form>
             <p className='mt-3'>
